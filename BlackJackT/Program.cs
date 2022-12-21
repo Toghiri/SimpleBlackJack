@@ -9,49 +9,48 @@ namespace BlackJackT
         {
             int won = 0;
             int lost = 0;
-            int res = 3;
-            Console.WriteLine("\nBENVENUTO AL TAVOLO DI BLACKJACK\n");
-            while (res == 3)
+            int tie = 0;
+            int res = 4;
+            Console.WriteLine("\nWELCOME TO THE BLACKJACK TABLE\n");
+            while (res == 4)
             {
-                res = Sel(res, won, lost);
+                res = Sel(res, won, lost, tie);
                 if (res == 1) { lost++; }
                 if (res == 2) { won++; }
-                res = 3;
+                if (res == 3) { tie++; }
+                res = 4;
             }
         }
         // La funzione "Sel" gestisce la selezione tra: "Play" , "Punteggio" , "Fine".
-        static int Sel(int rres, int wwon, int llost)
+        static int Sel(int sres, int swon, int slost, int stie)
         {
             Console.ForegroundColor = ConsoleColor.DarkRed;
-            Console.WriteLine("\nPLAY / PUNTEGGIO / FINE\n");
+            Console.WriteLine("\nPLAY / SCORE / EXIT\n");
             Console.ForegroundColor = ConsoleColor.Red;
             var input = Console.ReadLine();
             Console.ForegroundColor = ConsoleColor.White;
         // Il comando "Play" fa iterare la funzione "Gioco" e resituisce il risultato.
             while (input == "PLAY" || input == "play")
             {
-                rres = Gioco(rres);
+                sres = Game(sres);
                 input = "";
             }
-        // Il comando "Punteggio" stampa il una stringa contenete il punteggio.
-            while (input == "PUNTEGGIO" || input == "punteggio")
+        // Il comando "Score" stampa il una stringa contenete il punteggio.
+            while (input == "SCORE" || input == "score")
             {
-                Console.WriteLine($"\nMANI VINTE: {wwon}\nMANI PERSE: {llost}");
+                Console.WriteLine($"\nWON:   {swon}\nLOST:  {slost}\nTIED:  {stie}");
                 input = "";
             }
-        // Il comando "Fine" stampa il punteggio e termina il programma.
-            while (input == "FINE" || input == "fine")
+        // Il comando "Exit" stampa: "THANK YOU FOR THE GAME!" e termina il programma.
+            while (input == "EXIT" || input == "exit")
             {
-                Console.WriteLine($"\nIL PUNTEGGIO FINALE E':\n\nMANI VINTE: {wwon}\nMANI PERSE: {llost}");
-                Console.ForegroundColor = ConsoleColor.DarkRed;
-                Console.WriteLine("\nGRAZIE PER AVER GIOCATO!");
-                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine("\nTHANK YOU FOR THE GAME!");
                 Environment.Exit(0);
             }
-            return rres;
+            return sres;
         }
-        // La funzione "Gioco" gestisce la singola partita.
-        static int Gioco(int args, int result = 0)
+        // La funzione "Game" gestisce la singola partita.
+        static int Game(int args, int result = 0)
         {
             var rd = new Random();
             List<int> c = new List<int>();
@@ -59,15 +58,15 @@ namespace BlackJackT
             {
                 c.Add(rd.Next(1, 14));
             }
-            Console.WriteLine("\nLE TUE CARTE SONO:\n");
-            Console.WriteLine($"{FormatHand(c)}    VALORE TOT: {HandScore(c)}");
+            Console.WriteLine("\nYOUR CARDS:\n");
+            Console.WriteLine($"{FormatHand(c)}    TOT VALUE: {HandScore(c)}");
             List<int> m = new List<int>();
             for (int i = 0; i < 2; i++)
             {
                 m.Add(rd.Next(1, 14));
             }
-            Console.WriteLine("\nLE CARTE DEL TAVOLO SONO:\n");
-            Console.WriteLine($"{FormatHand(m)}    VALORE TOT: {HandScore(m)}");
+            Console.WriteLine("\nDEALER CARDS:\n");
+            Console.WriteLine($"{FormatHand(m)}    TOT VALUE: {HandScore(m)}");
             while (HandScore(c) < 22)
             {
                 Console.ForegroundColor = ConsoleColor.DarkRed;
@@ -78,8 +77,8 @@ namespace BlackJackT
                 if (command == "HIT" || command == "hit")
                 {
                     c.Add(rd.Next(1, 14));
-                    Console.WriteLine("\nLE TUE CARTE SONO:\n");
-                    Console.WriteLine($"{FormatHand(c)}   VALORE TOT: {HandScore(c)}");
+                    Console.WriteLine("\nYOUR CARDS:\n");
+                    Console.WriteLine($"{FormatHand(c)}   TOT VALUE: {HandScore(c)}");
                 }
                 else
                 {
@@ -92,8 +91,8 @@ namespace BlackJackT
                 {
                     m.Add(rd.Next(1, 14));
                 }
-                Console.WriteLine("\nLE CARTE DEL TAVOLO SONO:\n");
-                Console.WriteLine($"{FormatHand(m)}   VALORE TOT: {HandScore(m)}");
+                Console.WriteLine("\nDEALER CARDS:\n");
+                Console.WriteLine($"{FormatHand(m)}   TOT VALUE: {HandScore(m)}");
                 if (HandScore(m) < 22)
                 {
                     if (HandScore(c) > HandScore(m) || HandScore(c) == HandScore(m))
@@ -101,38 +100,39 @@ namespace BlackJackT
                         {
                             result = 2;
                             Console.ForegroundColor = ConsoleColor.Green;
-                            Console.WriteLine("\nHAI VINTO");
+                            Console.WriteLine("\nYOU WON");
                             Console.ForegroundColor = ConsoleColor.White;
                         }
                         else
                         {
+                            result = 3;
                             Console.ForegroundColor = ConsoleColor.DarkYellow;
-                            Console.WriteLine("\nPAREGGIO");
+                            Console.WriteLine("\nTIE");
                             Console.ForegroundColor = ConsoleColor.White;
                         }
                     else
                     {
                         result = 1;
                         Console.ForegroundColor = ConsoleColor.Blue;
-                        Console.WriteLine("\nHAI PERSO");
+                        Console.WriteLine("\nYOU LOST");
                         Console.ForegroundColor = ConsoleColor.White;
                     }
                 }
                 else
                 {
                     result = 2;
-                    Console.WriteLine("\nLA MANO DEL TAVOLO E' SCOPPIATA");
+                    Console.WriteLine("\nDEALER HAND HAS BUSTED");
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine("\nHAI VINTO");
+                    Console.WriteLine("\nYOU WON");
                     Console.ForegroundColor = ConsoleColor.White;
                 }
             }
             else
             {
                 result = 1;
-                Console.WriteLine("\nLA MANO E' SCOPPIATA");
+                Console.WriteLine("\nYOUR HAND HAS BUSTED");
                 Console.ForegroundColor = ConsoleColor.Blue;
-                Console.WriteLine("\nHAI PERSO");
+                Console.WriteLine("\nYOU LOST");
                 Console.ForegroundColor = ConsoleColor.White;
             }
 

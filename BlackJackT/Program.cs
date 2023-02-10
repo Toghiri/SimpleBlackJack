@@ -83,7 +83,7 @@ namespace BlackJackT
                     Console.WriteLine("\nYOUR CARDS:\n");
                     Console.WriteLine($"{FormatHand(c)}   TOT VALUE: {HandScore(c)}");
                 }
-                else
+                if (command == "STAND" || command == "stand" || command == "2")
                 {
                     break;
                 }
